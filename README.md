@@ -42,9 +42,9 @@ npm run go
 - POST /contas - Cria conta bancária -> HTTPStatus 201
 - PUT /contas/{numeroConta}/usuario - Atualizar usuário da conta bancária -> HTTPStatus 204
 - DELETE /contas/{numeroConta} - Excluir conta -> HTTPStatus 200
-- POST /transacoes/depositar - Efetuar depósito -> HTTPStatus 200
-- POST /transacoes/sacar - Sacar -> HTTPStatus 200
-- POST /transacoes/transferir - Transferir entre contas -> HTTPStatus 200
+- POST /transacoes/depositar - Efetuar depósito -> HTTPStatus 204
+- POST /transacoes/sacar - Sacar -> HTTPStatus 204
+- POST /transacoes/transferir - Transferir entre contas -> HTTPStatus 204
 - GET /contas/saldo?numero_conta={numero_conta}&senha={senha} - Consultar saldo -> HTTPStatus 200
 - GET /contas/extrato?numero_conta={numero_conta}&senha={senha} - Consultar Extrato -> HTTPStatus 200
 
