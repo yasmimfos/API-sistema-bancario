@@ -2,7 +2,7 @@
 
   <p align="left">
   Projeto realizado como Desafio do Módulo 2 no curso de Desenvolvimento de Software com foco em Backend da Cubos Academy, sob a instrução da profª Jéssica Medeiros. <br>
-  A API foi desenvolvida para realizar operações bancárias e cadastrais.
+  A API foi desenvolvida para realizar operações bancárias e cadastrais, onde os parâmetros devem ser passados dentro do body.
   </p>
 
 ## :computer: Linguagens e Ferramentas
