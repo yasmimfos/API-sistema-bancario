@@ -45,8 +45,8 @@ npm run go
 - POST /transacoes/depositar - Efetuar depósito -> HTTPStatus 204
 - POST /transacoes/sacar - Sacar -> HTTPStatus 204
 - POST /transacoes/transferir - Transferir entre contas -> HTTPStatus 204
-- GET /contas/saldo?numero_conta={numero_conta}&senha={senha} - Consultar saldo -> HTTPStatus 200
-- GET /contas/extrato?numero_conta={numero_conta}&senha={senha} - Consultar Extrato -> HTTPStatus 200
+- GET /contas/saldo - Consultar saldo -> HTTPStatus 200
+- GET /contas/extrato - Consultar Extrato -> HTTPStatus 200
 
 ## :technologist: Contribuidores
 
