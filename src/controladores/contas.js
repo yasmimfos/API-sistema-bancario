@@ -12,14 +12,14 @@ const criar = (req, res) => {
     if (!nome || !email || !cpf || !data_nascimento || !telefone || !senha) {
         return res.status(400).json({ mensagem: 'Todos os campos são obrigatórios!' });
     };
-
+    if (cpf.length !== 11) {
+        return res.status(400).json({ mensagem: "CPF inválido" })
+    };
     const validarcpf = contas.find((objeto) => {
         return objeto.usuario.cpf == cpf
     });
-    const validaremail = contas.find((objeto) => {
-        return objeto.usuario.email == email
-    });
-    if (!validarcpf && !validaremail) {
+
+    if (!validarcpf) {
         contas.push({
             numero: numero++,
             saldo: 0,
@@ -34,7 +34,7 @@ const criar = (req, res) => {
         });
         return res.status(201).send();
     } else {
-        return res.status(404).json({ mensagem: 'Já existe uma conta com o cpf ou e-mail informado!' });
+        return res.status(404).json({ mensagem: 'Já existe uma conta com o cpf informado!' });
     }
 
 };
@@ -53,13 +53,14 @@ const atualizar = (req, res) => {
     if (!validacao) {
         return res.status(400).json({ mensagem: "Número de Conta inválido!" })
     }
+    if (cpf.length !== 11) {
+        return res.status(400).json({ mensagem: "CPF inválido" })
+    };
     const validarcpf = contas.find((objeto) => {
         return objeto.usuario.cpf == cpf
     });
-    const validaremail = contas.find((objeto) => {
-        return objeto.usuario.email == email
-    });
-    if (!validarcpf && !validaremail) {
+
+    if (!validarcpf) {
         const cliente = contas.find((objeto) => {
             return objeto.numero === Number(numeroConta)
         });
