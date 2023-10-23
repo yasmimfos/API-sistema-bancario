@@ -1,7 +1,7 @@
 const express = require('express');
 const contas = require('./controladores/contas');
 const transacoes = require('./controladores/transacoes');
-const filtro = require('./controladores/filtro');
+const filtro = require('./middleware/filtro');
 
 const rotas = express();
 

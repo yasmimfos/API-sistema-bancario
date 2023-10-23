@@ -112,10 +112,6 @@ const extrato = (req, res) => {
         return res.status(400).json({ mensagem: "Todos os campos são obrigatórios" })
     };
 
-    const conta = bancodedados.contas.find((objeto) => {
-        return objeto.numero === Number(numero_conta);
-    });
-
     const depositos = bancodedados.depositos.filter((objeto) => {
         return objeto.numero_conta === numero_conta;
     });

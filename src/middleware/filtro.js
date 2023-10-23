@@ -1,7 +1,7 @@
 const { banco, contas } = require('../bancodedados');
 
 function verificarSenhaBanco(req, res, next) {
-    const { senha_banco } = req.query;
+    const { senha_banco } = req.body;
 
     if (senha_banco === banco.senha) {
         next()
