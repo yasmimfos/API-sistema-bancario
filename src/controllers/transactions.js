@@ -1,7 +1,7 @@
 let bancodedados = require('../bancodedados');
 const { format } = require('date-fns')
 
-const depositar = (req, res) => {
+const deposit = (req, res) => {
     const { numero_conta, valor } = req.body;
 
     if (!numero_conta || !valor) {
@@ -30,7 +30,7 @@ const depositar = (req, res) => {
     res.status(204).send();
 };
 
-const sacar = (req, res) => {
+const draft = (req, res) => {
     const { numero_conta, valor } = req.body;
 
     if (!numero_conta || !valor) {
@@ -58,7 +58,7 @@ const sacar = (req, res) => {
     res.status(204).send();
 };
 
-const transferir = (req, res) => {
+const transfer = (req, res) => {
     const { numero_conta_destino, numero_conta_origem, valor } = req.body;
 
     if (!numero_conta_origem || !numero_conta_destino || !valor) {
@@ -91,7 +91,7 @@ const transferir = (req, res) => {
     return res.status(204).send();
 };
 
-const saldo = (req, res) => {
+const balance = (req, res) => {
     const { numero_conta } = req.body;
 
     if (!numero_conta || !senha) {
@@ -105,7 +105,7 @@ const saldo = (req, res) => {
     return res.json({ valorSaldo });
 };
 
-const extrato = (req, res) => {
+const statement = (req, res) => {
     const { numero_conta } = req.body;
 
     if (!numero_conta) {
@@ -134,9 +134,9 @@ const extrato = (req, res) => {
 };
 
 module.exports = {
-    depositar,
-    sacar,
-    transferir,
-    saldo,
-    extrato
+    deposit,
+    draft,
+    transfer,
+    balance,
+    statement
 };

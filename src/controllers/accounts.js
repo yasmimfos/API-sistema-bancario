@@ -1,12 +1,16 @@
-let { contas } = require('../bancodedados');
+const pool = require('../connect');
 
-let numero = 1;
 
-const listar = (req, res) => {
-    return res.json(contas);
+const accountList = async (req, res) => {
+    try {
+        const accounts = await pool.query('select * from contas')
+        return res.json({ accounts });
+    } catch (error) {
+        return res.status(500).json({ message: 'Erro interno do servidor' })
+    }
 };
 
-const criar = (req, res) => {
+const accountRegister = (req, res) => {
     const { nome, cpf, data_nascimento, telefone, email, senha } = req.body;
 
     if (!nome || !email || !cpf || !data_nascimento || !telefone || !senha) {
@@ -39,7 +43,7 @@ const criar = (req, res) => {
 
 };
 
-const atualizar = (req, res) => {
+const accountUpdate = (req, res) => {
     const { numeroConta } = req.params;
     const { nome, cpf, data_nascimento, telefone, email, senha } = req.body;
 
@@ -77,7 +81,7 @@ const atualizar = (req, res) => {
     }
 };
 
-const excluir = (req, res) => {
+const accountDelete = (req, res) => {
     const { numeroConta } = req.params;
 
     const cliente = contas.find((objeto) => {
@@ -97,8 +101,8 @@ const excluir = (req, res) => {
 };
 
 module.exports = {
-    listar,
-    criar,
-    atualizar,
-    excluir
+    accountList,
+    accountRegister,
+    accountUpdate,
+    accountDelete
 };
