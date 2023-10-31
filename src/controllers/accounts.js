@@ -6,7 +6,7 @@ const accountList = async (req, res) => {
         const accounts = await pool.query('select * from contas')
         return res.json({ accounts });
     } catch (error) {
-        return res.status(500).json({ message: 'Erro interno do servidor' })
+        return res.status(500).json({ Message: 'Internal Server Error' })
     }
 };
 

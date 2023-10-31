@@ -27,7 +27,7 @@ const tokenValidation = async (req, res, next) => {
 };
 
 
-const dataValidation = async (req, res, next) => {
+const userDataValidation = async (req, res, next) => {
     const { nome, email, senha } = req.body
 
     if (!nome || !email || !senha) {
