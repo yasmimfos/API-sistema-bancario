@@ -1,51 +1,33 @@
-const pool = require('../conexao');
+const pool = require('../connect');
 const jwt = require('jsonwebtoken');
-const senhaJwt = require("../senhaJwt");
+const passwordJWT = require("../passwordJWT");
 
 const tokenValidation = async (req, res, next) => {
     const { authorization } = req.headers;
+    const { account_number } = req.body;
 
     if (!authorization) {
-        return res.status(401).json({ mensagem: 'Para acessar este recurso um token de autenticação válido deve ser enviado.' });
+        return res.status(401).json({ Message: 'Invalid Token' });
     };
 
     const token = authorization.split(' ')[1];
 
     try {
-        const { id } = jwt.verify(token, senhaJwt);
+        const { id } = jwt.verify(token, passwordJWT);
 
-        const verificar = await pool.query('select * from usuarios where id = $1', [id]);
+        const verify = await pool.query('select * from accounts where account_number = $1', [id]);
+        if (verify.rows[0].account_number != account_number) {
+            return res.status(403).json({ Message: "Acess Invalid. Log in with your account." })
+        };
 
-        req.userLog = verificar.rows[0];
+        req.userLog = verify.rows[0];
         next()
     } catch (erro) {
-        if (erro.message = 'invalid token') {
-            return res.status(401).json({ mensagem: 'Para acessar este recurso um token de autenticação válido deve ser enviado.' })
+        if (erro.message = 'Invalid Token') {
+            return res.status(401).json({ Message: 'Invalid Token' })
         };
-        return res.status(500).json({ mensagem: 'Erro interno no servidor' });
+        return res.status(500).json({ Message: 'Internal Server Error' });
     };
 };
 
-
-const userDataValidation = async (req, res, next) => {
-    const { nome, email, senha } = req.body
-
-    if (!nome || !email || !senha) {
-        return res.status(400).json({ mensagem: 'Todos os campos devem ser preenchidos' });
-    };
-
-    try {
-        const validarEmail = await pool.query('select email from usuarios where email = $1', [email]);
-
-        if (validarEmail.rowCount > 1) {
-            return res.status(400).json({ mensagem: 'Já existe usuário cadastrado com o e-mail informado.' });
-        };
-    } catch (erro) {
-        return res.status(500).json(erro.message);
-    }
-
-    req.usuarioVerificado = { nome, email, senha };
-    next()
-};
-
-module.exports = { tokenValidation, dataValidation };
+module.exports = tokenValidation;

@@ -1,103 +1,63 @@
 const pool = require('../connect');
-
+const bcrypt = require('bcrypt');
 
 const accountList = async (req, res) => {
+    const { account_number } = req.body;
     try {
-        const accounts = await pool.query('select * from contas')
-        return res.json({ accounts });
+        if (!account_number) {
+            const { rows } = await pool.query('select account_number, branch_id, client, birth_date, phone, email from accounts');
+            return res.json(rows);
+        };
+
+        const { rows, rowCount } = await pool.query('select account_number, branch_id, client, birth_date, phone, email from accounts where account_number = $1', [account_number]);
+        if (rowCount < 1) {
+            return res.status(404).json({ Message: 'Account number not found' })
+        }
+
+        return res.json(rows[0]);
+
     } catch (error) {
         return res.status(500).json({ Message: 'Internal Server Error' })
     }
 };
 
-const accountRegister = (req, res) => {
-    const { nome, cpf, data_nascimento, telefone, email, senha } = req.body;
+const accountRegister = async (req, res) => {
+    const { branch_id, client, birth_date, cpf, phone, email, password } = req.body;
+    try {
+        const passwordEncripted = await bcrypt.hash(password, 10);
+        const newRegister = await pool.query('insert into accounts (branch_id, client, birth_date, cpf, phone, email, password) values ($1, $2, $3, $4, $5, $6, $7) returning *',
+            [branch_id, client, birth_date, cpf, phone, email, passwordEncripted]);
+        const { password: senha, ...register } = newRegister.rows[0];
 
-    if (!nome || !email || !cpf || !data_nascimento || !telefone || !senha) {
-        return res.status(400).json({ mensagem: 'Todos os campos são obrigatórios!' });
-    };
-    if (cpf.length !== 11) {
-        return res.status(400).json({ mensagem: "CPF inválido" })
-    };
-    const validarcpf = contas.find((objeto) => {
-        return objeto.usuario.cpf == cpf
-    });
-
-    if (!validarcpf) {
-        contas.push({
-            numero: numero++,
-            saldo: 0,
-            usuario: {
-                nome,
-                cpf,
-                data_nascimento,
-                telefone,
-                email,
-                senha
-            }
-        });
-        return res.status(201).send();
-    } else {
-        return res.status(404).json({ mensagem: 'Já existe uma conta com o cpf informado!' });
-    }
-
-};
-
-const accountUpdate = (req, res) => {
-    const { numeroConta } = req.params;
-    const { nome, cpf, data_nascimento, telefone, email, senha } = req.body;
-
-    if (!nome || !email || !cpf || !data_nascimento || !telefone || !senha) {
-        return res.status(400).json({ mensagem: 'Todos os campos são obrigatórios!' });
-    };
-
-    const validacao = contas.find((objeto) => {
-        return objeto.numero === Number(numeroConta);
-    });
-    if (!validacao) {
-        return res.status(400).json({ mensagem: "Número de Conta inválido!" })
-    }
-    if (cpf.length !== 11) {
-        return res.status(400).json({ mensagem: "CPF inválido" })
-    };
-    const validarcpf = contas.find((objeto) => {
-        return objeto.usuario.cpf == cpf
-    });
-
-    if (!validarcpf) {
-        const cliente = contas.find((objeto) => {
-            return objeto.numero === Number(numeroConta)
-        });
-
-        cliente.usuario.nome = nome,
-            cliente.usuario.cpf = cpf,
-            cliente.usuario.data_nascimento = data_nascimento,
-            cliente.usuario.telefone = telefone,
-            cliente.usuario.email = email,
-            cliente.usuario.senha = senha
-        return res.status(204).send();
-    } else {
-        return res.status(404).json({ mensagem: 'Já existe uma conta com o cpf ou e-mail informado!' });
+        return res.json(register);
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ Message: 'Internal Server Error' })
     }
 };
 
-const accountDelete = (req, res) => {
-    const { numeroConta } = req.params;
+const accountUpdate = async (req, res) => {
+    const { branch_id, client, birth_date, cpf, phone, email, password } = req.body;
+    try {
+        const passwordEncripted = await bcrypt.hash(password, 10);
+        const { rows } = await pool.query('update accounts set branch_id = $1, client = $2, birth_date = $3, cpf = $4, phone = $5, email = $6, password = $7 returning *',
+            [branch_id, client, birth_date, cpf, phone, email, passwordEncripted]);
+        const { password: senha, ...updated } = rows[0];
 
-    const cliente = contas.find((objeto) => {
-        return objeto.numero === Number(numeroConta)
-    });
+        return res.json(updated);
+    } catch (error) {
+        return res.status(500).json({ Message: 'Internal Server Error' });
+    }
+};
 
-    if (!cliente) {
-        return res.status(400).json({ mensagem: "Número de Conta inválido!" })
-    } else if (cliente.saldo === 0) {
-        contas = contas.filter((objeto) => {
-            return objeto.numero !== Number(numeroConta)
-        });
-        return res.status(204).send();
-    } else {
-        return res.status(403).json({ mensagem: 'A conta só pode ser excluída se o saldo for igual a R$0' })
-    };
+const accountDelete = async (req, res) => {
+    const { account_number } = req.body;
+    try {
+        const client = await pool.query('delete from accounts where account_number = $1', [account_number]);
+        return res.json({ Message: 'Account deleted' });
+    } catch (error) {
+        return res.status(500).json({ Message: 'Internal Server Error' });
+    }
 };
 
 module.exports = {

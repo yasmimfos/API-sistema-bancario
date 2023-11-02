@@ -1,5 +1,5 @@
 const { Pool } = require('pg');
-const passwordDatabase = require('../passwordDatabase');
+const passwordDatabase = require('./passwordDatabase');
 
 const pool = new Pool({
     host: 'localhost',
