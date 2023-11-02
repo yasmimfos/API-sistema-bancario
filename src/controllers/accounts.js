@@ -27,7 +27,7 @@ const accountRegister = async (req, res) => {
         const passwordEncripted = await bcrypt.hash(password, 10);
         const newRegister = await pool.query('insert into accounts (branch_id, client, birth_date, cpf, phone, email, password, amount) values ($1, $2, $3, $4, $5, $6, $7, 0) returning *',
             [branch_id, client, birth_date, cpf, phone, email, passwordEncripted]);
-        const { password: senha, ...register } = newRegister.rows[0];
+        const { password: pass, ...register } = newRegister.rows[0];
 
         return res.json(register);
     } catch (error) {
@@ -42,7 +42,7 @@ const accountUpdate = async (req, res) => {
         const passwordEncripted = await bcrypt.hash(password, 10);
         const { rows } = await pool.query('update accounts set branch_id = $1, client = $2, birth_date = $3, cpf = $4, phone = $5, email = $6, password = $7 returning *',
             [branch_id, client, birth_date, cpf, phone, email, passwordEncripted]);
-        const { password: senha, ...updated } = rows[0];
+        const { password: pass, ...updated } = rows[0];
 
         return res.json(updated);
     } catch (error) {
