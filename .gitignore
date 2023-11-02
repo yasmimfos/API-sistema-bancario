@@ -2,4 +2,3 @@ node_modules/
 **/.DS_Store
 passwordJWT.js
 passwordDatabase.js
-dump.sql
