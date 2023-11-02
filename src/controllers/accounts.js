@@ -25,7 +25,7 @@ const accountRegister = async (req, res) => {
     const { branch_id, client, birth_date, cpf, phone, email, password } = req.body;
     try {
         const passwordEncripted = await bcrypt.hash(password, 10);
-        const newRegister = await pool.query('insert into accounts (branch_id, client, birth_date, cpf, phone, email, password) values ($1, $2, $3, $4, $5, $6, $7) returning *',
+        const newRegister = await pool.query('insert into accounts (branch_id, client, birth_date, cpf, phone, email, password, amount) values ($1, $2, $3, $4, $5, $6, $7, 0) returning *',
             [branch_id, client, birth_date, cpf, phone, email, passwordEncripted]);
         const { password: senha, ...register } = newRegister.rows[0];
 

@@ -3,11 +3,6 @@ const bcrypt = require('bcrypt');
 
 const balance = (req, res) => {
     const { amount } = req.client;
-
-    if (amount == null) {
-        return res.json({ Amount: '0' })
-    }
-
     return res.json({ amount });
 };
 
