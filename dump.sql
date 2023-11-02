@@ -11,29 +11,31 @@ create table accounts(
     branch_id integer references bank(bank_branch),
     client varchar(50) not null,
     birth_date varchar(10) not null,
-    cpf varchar(14) not null unique,
+    cpf varchar(14) not null,
     phone varchar(15),
     email varchar(30),
-    password varchar(100) not null
+    password varchar(100) not null,
+    amount integer
 );
 
-create table deposito(
+create table deposit(
     id serial primary key,
     account integer references accounts(account_number) not null,
     amount integer not null,
+    date date not null
 );
 
-create table saque(
+create table draft(
     id serial primary key,
     account integer references accounts(account_number) not null,
     amount integer not null,
-    password varchar(100) not null
+    date date not null
 );
 
-create table transferencia(
+create table transfer(
     id serial primary key,
     sender_account integer references accounts(account_number) not null,
     receiver_account integer references accounts(account_number) not null,
     amount integer not null,
-    password varchar(100) not null
+    date date not null
 );
