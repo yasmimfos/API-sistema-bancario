@@ -1,6 +1,5 @@
 const pool = require('../connect');
 const jwt = require('jsonwebtoken');
-require('dotenv').config();
 
 const tokenValidation = async (req, res, next) => {
     const { authorization } = req.headers;

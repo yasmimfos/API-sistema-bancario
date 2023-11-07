@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-require('dotenv').config();
 
 const login = async (req, res) => {
     const { account_number } = req.client;
