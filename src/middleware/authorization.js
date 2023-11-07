@@ -1,6 +1,6 @@
 const pool = require('../connect');
 const jwt = require('jsonwebtoken');
-const passwordJWT = require("../passwordJWT");
+require('dotenv').config();
 
 const tokenValidation = async (req, res, next) => {
     const { authorization } = req.headers;
@@ -13,7 +13,7 @@ const tokenValidation = async (req, res, next) => {
     const token = authorization.split(' ')[1];
 
     try {
-        const { id } = jwt.verify(token, passwordJWT);
+        const { id } = jwt.verify(token, process.env.PASSWORD_JWT);
 
         const verify = await pool.query('select * from accounts where account_number = $1', [id]);
         if (verify.rows[0].account_number != account_number) {

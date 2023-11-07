@@ -1,14 +1,12 @@
 const jwt = require('jsonwebtoken');
-const passwordJWT = require("../passwordJWT");
-const bcrypt = require("bcrypt");
-const pool = require('../connect');
+require('dotenv').config();
 
 const login = async (req, res) => {
     const { account_number } = req.client;
 
     try {
 
-        const token = jwt.sign({ id: account_number }, passwordJWT, {
+        const token = jwt.sign({ id: account_number }, process.env.PASSWORD_JWT, {
             expiresIn: '3h',
         });
 
