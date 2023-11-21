@@ -5,7 +5,7 @@ const login = async (req, res) => {
 
     try {
 
-        const token = jwt.sign({ id: account_number }, process.env.PASSWORD_JWT, {
+        const token = jwt.sign({ id: account_number }, process.env.JWT_PASS, {
             expiresIn: '3h',
         });
 
